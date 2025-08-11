@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>1-1 單字聽打</title>
+  <title>0-3 單字聽打</title>
   <style>
     body {
       font-family: sans-serif;
@@ -64,8 +64,8 @@
 </head>
 <body>
   <img id="logo" src="logo.png" alt="Logo">
-  <div id="game-title">1-1 單字聽打</div>
-  <div id="question-number">第 1 題 / 共 15 題</div>
+  <div id="game-title">0-3 單字聽打</div>
+  <div id="question-number">第 1 題 / 共 12 題</div>
   <audio id="audio" controls></audio><br>
   <input type="text" id="answer" placeholder="請輸入聽到的內容"><br>
   <div class="note">&nbsp;</div>
@@ -89,21 +89,18 @@
 
   <script>
     const questions = [
-      { audio: "a.mp3", answer: "아" },
-      { audio: "eo.mp3", answer: "어" },
-      { audio: "o.mp3", answer: "오" },
-      { audio: "u.mp3", answer: "우" },
-      { audio: "eu.mp3", answer: "으" },
-      { audio: "ya.mp3", answer: "야" },
-      { audio: "yeo.mp3", answer: "여" },
-      { audio: "yo.mp3", answer: "요" },
-      { audio: "yu.mp3", answer: "유" },
-      { audio: "i.mp3", answer: "이" },
-      { audio: "cucumber.mp3", answer: "오이" },
-      { audio: "fox.mp3", answer: "여우" },
-      { audio: "reason.mp3", answer: "이유" },
-      { audio: "hurry.mp3", answer: "어여" },
-      { audio: "milk.mp3", answer: "우유" }
+      { audio: "000401W.mp3", answer: "가루" },
+      { audio: "000402W.mp3", answer: "고모" },
+      { audio: "000403W.mp3", answer: "요가" },
+      { audio: "000404W.mp3", answer: "고구마" },
+      { audio: "000405W.mp3", answer: "카드" },
+      { audio: "000406W.mp3", answer: "마이크" },
+      { audio: "000407W.mp3", answer: "쿠키" },
+      { audio: "000408W.mp3", answer: "코" },
+      { audio: "000409W.mp3", answer: "꼬리" },
+      { audio: "000410W.mp3", answer: "두꺼비" },
+      { audio: "000411W.mp3", answer: "코끼리" },
+      { audio: "000412W.mp3", answer: "꼬마" }
     ];
 
     function shuffle(array) {
@@ -207,7 +204,7 @@
         String(now.getSeconds()).padStart(2, '0');
       const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
       const weekday = weekdays[now.getDay()];
-      const gameTitle = "1-1 單字聽打";
+      const gameTitle = "0-3 單字聽打";
 
       const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSd8KhDu_lq6g4aPzkLaNYUUVG9P0E9cRT1R2WVDIkkfFh7WxA/formResponse";
       const formData = new FormData();
