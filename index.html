@@ -24,6 +24,11 @@
     }
     #question-number {
       font-size: 18px;
+      margin-bottom: 10px;
+    }
+    #timer {
+      font-size: 18px;
+      color: red;
       margin-bottom: 20px;
     }
     button {
@@ -66,10 +71,11 @@
   <img id="logo" src="logo.png" alt="Logo">
   <div id="game-title">0-4 單字聽打</div>
   <div id="question-number">第 1 題 / 共 12 題</div>
+  <div id="timer">剩餘時間：-- 秒</div>
   <audio id="audio" controls></audio><br>
   <input type="text" id="answer" placeholder="請輸入聽到的內容"><br>
   <div class="note">&nbsp;</div>
-  <div class="note" id="hint">請注意空格與標點符號</div>
+  <div class="note">&nbsp;</div>
   <button id="check-btn" disabled>確認</button>
   <div id="result"></div>
   <button id="next-btn" class="hidden">下一題</button>
@@ -89,18 +95,18 @@
 
   <script>
     const questions = [
-      { audio: "000401W.mp3", answer: "가루" },
-      { audio: "000402W.mp3", answer: "고모" },
-      { audio: "000403W.mp3", answer: "요가" },
-      { audio: "000404W.mp3", answer: "고구마" },
-      { audio: "000405W.mp3", answer: "카드" },
-      { audio: "000406W.mp3", answer: "마이크" },
-      { audio: "000407W.mp3", answer: "쿠키" },
-      { audio: "000408W.mp3", answer: "코" },
-      { audio: "000409W.mp3", answer: "꼬리" },
-      { audio: "000410W.mp3", answer: "두꺼비" },
-      { audio: "000411W.mp3", answer: "코끼리" },
-      { audio: "000412W.mp3", answer: "꼬마" }
+  { audio: "000401W.mp3", answer: "가루", chinese: "粉" },
+  { audio: "000402W.mp3", answer: "고모", chinese: "姑姑" },
+  { audio: "000403W.mp3", answer: "요가", chinese: "瑜珈" },
+  { audio: "000404W.mp3", answer: "고구마", chinese: "地瓜" },
+  { audio: "000405W.mp3", answer: "카드", chinese: "卡片" },
+  { audio: "000406W.mp3", answer: "마이크", chinese: "麥克風" },
+  { audio: "000407W.mp3", answer: "쿠키", chinese: "餅乾" },
+  { audio: "000408W.mp3", answer: "코", chinese: "鼻子" },
+  { audio: "000409W.mp3", answer: "꼬리", chinese: "尾巴" },
+  { audio: "000410W.mp3", answer: "두꺼비", chinese: "癩蛤蟆" },
+  { audio: "000411W.mp3", answer: "코끼리", chinese: "大象" },
+  { audio: "000412W.mp3", answer: "꼬마", chinese: "小不點" }
     ];
 
     function shuffle(array) {
@@ -116,6 +122,9 @@
     let correct = 0;
     let finalScore = 0;
 
+    let timer; 
+    let timeLeft;
+
     const audio = document.getElementById("audio");
     const answerInput = document.getElementById("answer");
     const checkBtn = document.getElementById("check-btn");
@@ -127,7 +136,7 @@
     const nicknameInput = document.getElementById("nickname");
     const submitBtn = document.getElementById("submit-btn");
     const restartBtn = document.getElementById("restart-btn");
-    const hintDiv = document.getElementById("hint");
+    const timerDiv = document.getElementById("timer");
 
     answerInput.addEventListener("input", () => {
       checkBtn.disabled = answerInput.value.trim() === "";
@@ -142,18 +151,34 @@
       checkBtn.disabled = true;
       nextBtn.classList.add("hidden");
       questionNumber.textContent = `第 ${current + 1} 題 / 共 ${shuffledQuestions.length} 題`;
-      hintDiv.style.display = "block";
+    }
+
+    function startTimer() {
+      timeLeft = shuffledQuestions.length * 10;
+      timerDiv.textContent = `剩餘時間：${timeLeft} 秒`;
+
+      timer = setInterval(() => {
+        timeLeft--;
+        timerDiv.textContent = `剩餘時間：${timeLeft} 秒`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          endGame();
+        }
+      }, 1000);
     }
 
     checkBtn.addEventListener("click", () => {
       const userAns = answerInput.value.trim();
-      const correctAns = shuffledQuestions[current].answer.trim();
+      const q = shuffledQuestions[current];
+      const correctAns = q.answer.trim();
+
       if (userAns === correctAns) {
-        resultDiv.innerHTML = "✅ 正確！";
+        resultDiv.innerHTML = `✅ 答對了🎉 你真棒👍🏻<br>📘 中文：<strong>${q.chinese}</strong>`;
         correct++;
       } else {
-        resultDiv.innerHTML = `❌ 錯誤。正確答案：${correctAns}`;
+        resultDiv.innerHTML = `❌ 錯誤。正確答案是：<strong>${correctAns}</strong><br>📘 中文：<strong>${q.chinese}</strong>`;
       }
+
       answerInput.disabled = true;
       checkBtn.disabled = true;
       nextBtn.classList.remove("hidden");
@@ -169,6 +194,7 @@
     });
 
     function endGame() {
+      clearInterval(timer);
       finalScore = Math.round((correct / shuffledQuestions.length) * 100);
       const passStatus = finalScore >= 80 ? "✅ 合格" : "❌ 不合格 請重新測驗";
       finalScoreDiv.innerHTML = `<h2>你答對 ${correct}/${shuffledQuestions.length} 題，得分 ${finalScore}% - ${passStatus}</h2>`;
@@ -182,7 +208,7 @@
       audio.style.display = "none";
       questionNumber.style.display = "none";
       resultDiv.style.display = "none";
-      hintDiv.style.display = "none";
+      timerDiv.style.display = "none";
     }
 
     nicknameInput.addEventListener("input", () => {
@@ -202,41 +228,51 @@
         String(now.getHours()).padStart(2, '0') + ":" +
         String(now.getMinutes()).padStart(2, '0') + ":" +
         String(now.getSeconds()).padStart(2, '0');
-      const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      const weekday = weekdays[now.getDay()];
-      const gameTitle = "0-4 單字聽打";
 
+      const weekdayNames = ["日", "一", "二", "三", "四", "五", "六"];
+      const weekday = weekdayNames[now.getDay()];
+      const gameTitle = document.getElementById("game-title").textContent;
+
+      // Google 表單送出
       const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSd8KhDu_lq6g4aPzkLaNYUUVG9P0E9cRT1R2WVDIkkfFh7WxA/formResponse";
       const formData = new FormData();
-      formData.append("entry.1082970818", nickname);
-      formData.append("entry.851626887", finalScore);
-      formData.append("entry.498226528", time);
-      formData.append("entry.532888754", weekday);
-      formData.append("entry.1110600272", gameTitle);
+      formData.append("entry.1082970818", nickname);   // 暱稱
+      formData.append("entry.851626887", finalScore);  // 分數
+      formData.append("entry.498226528", time);        // 測驗時間
+      formData.append("entry.532888754", weekday);     // 星期
+      formData.append("entry.1110600272", gameTitle);  // 測驗名稱
 
       fetch(formURL, { method: "POST", mode: "no-cors", body: formData })
-        .then(() => alert("✅ 提交成功!!可重複測驗"));
+        .then(() => {
+          alert("✅ 提交成功!! 可重複測驗");
+        })
+        .catch(() => {
+          alert("❌ 提交失敗，請稍後再試");
+        });
     });
 
     restartBtn.addEventListener("click", () => {
+      shuffledQuestions = shuffle([...questions]);
       current = 0;
       correct = 0;
       finalScore = 0;
-      nicknameInput.value = "";
-      submitBtn.disabled = true;
-      nicknameSection.classList.add("hidden");
+      loadQuestion();
+      startTimer();
+
       finalScoreDiv.innerHTML = "";
-      answerInput.style.display = "inline-block";
-      checkBtn.style.display = "inline-block";
-      audio.style.display = "inline-block";
+      nicknameSection.classList.add("hidden");
+
+      answerInput.style.display = "block";
+      checkBtn.style.display = "block";
+      nextBtn.style.display = "none";
+      audio.style.display = "block";
       questionNumber.style.display = "block";
       resultDiv.style.display = "block";
-      hintDiv.style.display = "block";
-      shuffledQuestions = shuffle([...questions]);
-      loadQuestion();
+      timerDiv.style.display = "block";
     });
 
     loadQuestion();
+    startTimer();
   </script>
 </body>
 </html>
