@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>0-3 單字聽打</title>
+  <title>0-4 單字聽打</title>
   <style>
     body {
       font-family: sans-serif;
@@ -64,7 +64,7 @@
 </head>
 <body>
   <img id="logo" src="logo.png" alt="Logo">
-  <div id="game-title">0-3 單字聽打</div>
+  <div id="game-title">0-4 單字聽打</div>
   <div id="question-number">第 1 題 / 共 12 題</div>
   <audio id="audio" controls></audio><br>
   <input type="text" id="answer" placeholder="請輸入聽到的內容"><br>
@@ -204,7 +204,7 @@
         String(now.getSeconds()).padStart(2, '0');
       const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
       const weekday = weekdays[now.getDay()];
-      const gameTitle = "0-3 單字聽打";
+      const gameTitle = "0-4 單字聽打";
 
       const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSd8KhDu_lq6g4aPzkLaNYUUVG9P0E9cRT1R2WVDIkkfFh7WxA/formResponse";
       const formData = new FormData();
